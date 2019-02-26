@@ -129,7 +129,8 @@ function draw() {
   const xs = [0, 1];
 
   // Predict the y values 
-  const ys = tf.tidy(() => predict(xs)).dataSync();
+  const ys = tf.tidy(() => predict(xs));
+  const yLine = ys.dataSync();
   ys.dispose();
 
   // Get two points on the line (x1,y1) and (x2,y2) and draw a line between them
@@ -137,8 +138,8 @@ function draw() {
   let x1 = map(xs[0], 0, 1, 0, width);
   let x2 = map(xs[1], 0, 1, 0, width);
 
-  let y1 = map(ys[0], 0, 1, height, 0);
-  let y2 = map(ys[1], 0, 1, height, 0);
+  let y1 = map(yLine[0], 0, 1, height, 0);
+  let y2 = map(yLine[1], 0, 1, height, 0);
 
   // create the line 
   
