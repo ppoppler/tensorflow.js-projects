@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Row, Col, Button, ButtonGroup } from "reactstrap";
+import * as firebase from "firebase";
 import { initializeColor } from "./randomizer";
+import config from "./firebase";
+  
 
-
+var fbase = firebase.initializeApp(config);
 
 export default class ColorInterface extends Component {
 
@@ -12,10 +15,15 @@ export default class ColorInterface extends Component {
             colors : initializeColor()
         }
         this.changeColor = this.changeColor.bind(this);
+        this.sendData = this.sendData.bind(this);
     }
 
     changeColor(){
         this.setState({colors : initializeColor()});
+    }
+
+    sendData(){
+        const colorDatabase = fbase.database.ref('colors');
     }
   render() {
     return (
