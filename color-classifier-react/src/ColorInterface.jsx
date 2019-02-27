@@ -3,28 +3,44 @@ import { Row, Col, Button, ButtonGroup } from "reactstrap";
 import * as firebase from "firebase";
 import { initializeColor } from "./randomizer";
 import config from "./firebase";
-  
 
 var fbase = firebase.initializeApp(config);
 
 export default class ColorInterface extends Component {
+  constructor() {
+    super();
+    this.state = {
+      colors: initializeColor()
+    };
+    this.changeColor = this.changeColor.bind(this);
+    
+  }
 
-    constructor(){
-        super();
-        this.state = {
-            colors : initializeColor()
-        }
-        this.changeColor = this.changeColor.bind(this);
-        this.sendData = this.sendData.bind(this);
-    }
+  changeColor(type) {
+    this.sendData(type);
+    this.setState({ colors: initializeColor() });
+  }
 
-    changeColor(){
-        this.setState({colors : initializeColor()});
-    }
+  sendData(type) {
+    const colorDatabase = firebase.database().ref("colors");
+    var data = {
+      r: this.state.colors[0],
+      g: this.state.colors[1],
+      b: this.state.colors[2],
+      type: type
+    };
+    console.log(data);
 
-    sendData(){
-        const colorDatabase = fbase.database.ref('colors');
-    }
+    let color = colorDatabase.push(data, err => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Data saved successfully");
+      }
+    });
+    //console.log("Firebase generated key:" + color.key);
+  }
+
   render() {
     return (
       <div className="container">
@@ -36,16 +52,51 @@ export default class ColorInterface extends Component {
             />
           </Col>
           <Col xs={8}>
-            <h1>Color Crowdsource Regonition</h1>
+            <h1>Color Crowdsource Recognition</h1>
             <p>Using this tool, determine what type of color it is</p>
             <ButtonGroup>
-              <Button onClick={this.changeColor} style={{backgroundColor: "firebrick"}}>Red-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor: "limegreen"}}>Green-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor: "royalblue"}}>Blue-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor:"saddlebrown"}}>Brown-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor:"orange"}}>Orange-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor:"pink"}}>Pink-ish</Button>
-              <Button onClick={this.changeColor} style={{backgroundColor:"grey"}}>Grey-ish</Button>
+              <Button
+                onClick={() => this.changeColor("Red-ish")}
+                style={{ backgroundColor: "firebrick" }}
+              >
+                Red-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Green-ish")}
+                style={{ backgroundColor: "limegreen" }}
+              >
+                Green-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Blue-ish")}
+                style={{ backgroundColor: "royalblue" }}
+              >
+                Blue-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Brown-ish")}
+                style={{ backgroundColor: "saddlebrown" }}
+              >
+                Brown-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Orange-ish")}
+                style={{ backgroundColor: "orange" }}
+              >
+                Orange-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Pink-ish")}
+                style={{ backgroundColor: "pink" }}
+              >
+                Pink-ish
+              </Button>
+              <Button
+                onClick={()=> this.changeColor("Grey-ish")}
+                style={{ backgroundColor: "grey" }}
+              >
+                Grey-ish
+              </Button>
             </ButtonGroup>
           </Col>
         </Row>
